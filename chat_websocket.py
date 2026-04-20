@@ -3,12 +3,12 @@ from datetime import datetime
 from typing import Dict, List
 from fastapi import WebSocket, WebSocketDisconnect
 from pydantic import json
-import docs.chatservice as chatservice
-from docs.security import verify_token
-from docs.database import get_db
+import chatservice as chatservice
+from security import verify_token
+from database import get_db
 from sqlalchemy.orm import Session
-from docs.models import User, Product, ChatHistory
-from docs.chatservice import process_message
+from models import User, Product, ChatHistory
+from chatservice import process_message
 # (
 #    1: Websocket, # user_id: websocket,
 #    2: Websocket,

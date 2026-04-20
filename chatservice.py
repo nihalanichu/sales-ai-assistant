@@ -1,6 +1,6 @@
 from google import genai
 from dotenv import load_dotenv
-from docs.models import ChatHistory, Product
+from models import ChatHistory, Product
 from typing import List
 load_dotenv()  
 

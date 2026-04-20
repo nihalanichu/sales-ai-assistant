@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status, Header
 from typing import Optional
-from docs.models import User
+from models import User
 import jwt
 
 def verify_token(token: str) -> Optional[int]:

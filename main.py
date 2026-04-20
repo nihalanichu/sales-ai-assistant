@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException, WebSocket, status
-from docs.authentication import authentication_router
-from docs.database import BaseModel, engine
-from docs.my_orders import my_orders_router
-from docs.chat_websocket import handle_chat_websocket
+from authentication import authentication_router
+from database import BaseModel, engine
+from my_orders import my_orders_router
+from chat_websocket import handle_chat_websocket
 from fastapi.middleware.cors import CORSMiddleware
-from docs.products import products_router
+from products import products_router
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 

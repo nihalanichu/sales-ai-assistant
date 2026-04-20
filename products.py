@@ -1,10 +1,10 @@
 # this will have get_my_orders
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from docs.security import get_current_user
-from docs.database import get_db
-from docs.models import Product
-from docs.schemas import CreateProduct
+from security import get_current_user
+from database import get_db
+from models import Product
+from schemas import CreateProduct
 
 products_router = APIRouter(
     prefix="/api",

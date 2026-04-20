@@ -1,0 +1,81 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables+-++
+.env
+.env.*
+!.env.example
+
+# FastAPI / Uvicorn
+uvicorn.log
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database files
+*.sqlite3
+*.db
+
+# Test / coverage reports
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Migrations (optional - keep if needed)
+# alembic/versions/
+
+# Static / media files (if generated)
+staticfiles/
+media/
+
+# Node (if frontend included)
+node_modules/
+dist/
+build/
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+.cache/
+
+# mypy / type checking
+.mypy_cache/
+
+# Ruff / lint cache
+.ruff_cache/
+
+# Pyright
+.pyright/
+
+# Coverage
+coverage.xml
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/

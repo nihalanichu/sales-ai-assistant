@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat App</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #1e1e2f;
+      color: white;
+    }
+
+    .chat-wrapper {
+      max-width: 750px;
+      margin: auto;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      background: #2c2f4a;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .msg {
+      padding: 10px 14px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      max-width: 75%;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background: #0d6efd;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .bot {
+      background: #6c757d;
+      margin-right: auto;
+    }
+
+    .input-area {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .loader {
+      display: none;
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="chat-wrapper">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h4>💬 Chat</h4>
+    <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Chat Box -->
+  <div id="chatBox" class="chat-box"></div>
+
+  <!-- Loader -->
+  <div id="loader" class="loader">
+    <div class="spinner-border text-light"></div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-area">
+    <input id="messageInput" class="form-control" placeholder="Type a message..." />
+    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+  </div>
+
+</div>
+
+<script>
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "login.html";
+  }
+
+  const chatBox = document.getElementById("chatBox");
+  const loader = document.getElementById("loader");
+
+  // WebSocket connection
+  const ws = new WebSocket(`ws://127.0.0.1:8000/ws/chat?token=${token}`);
+
+  ws.onopen = () => {
+    console.log("Connected");
+  };
+
+  ws.onmessage = (event) => {
+    loader.style.display = "none";
+
+    const data = JSON.parse(event.data);
+
+    // Load chat history
+    if (data.type === "history") {
+      data.message.forEach(msg => {
+        addMessage(msg.message, msg.sender);
+      });
+    }
+
+    // Bot/user message
+    if (data.type === "message") {
+      addMessage(data.message, data.sender === "user" ? "user" : "bot");
+    }
+  };
+
+  ws.onerror = (err) => {
+    console.log("WebSocket error", err);
+  };
+
+  ws.onclose = () => {
+    console.log("Disconnected");
+  };
+
+  // Send message
+  function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // show user message immediately
+    addMessage(message, "user");
+
+    // show loader
+    loader.style.display = "block";
+
+    ws.send(JSON.stringify({ message }));
+
+    input.value = "";
+  }
+
+  // Add message to UI
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.classList.add("msg");
+
+    div.classList.add(type === "user" ? "user" : "bot");
+
+    div.innerText = text;
+
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Logout
+  function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  }
+
+  // Enter key support
+  document.getElementById("messageInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+</script>
+</body>
+</html>

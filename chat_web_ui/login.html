@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Chat App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e1e2f, #2c2f4a);
+      height: 100vh;
+    }
+
+    .card {
+      border-radius: 15px;
+    }
+
+    .form-control {
+      border-radius: 10px;
+    }
+
+    .btn {
+      border-radius: 10px;
+    }
+
+    .brand {
+      font-weight: bold;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0d6efd;
+    }
+  </style>
+
+</head>
+
+<body class="d-flex align-items-center justify-content-center">
+
+  <div class="col-md-4">
+    <div class="card shadow-lg p-4">
+
+  <div class="brand">Chat App</div>
+
+  <h4 class="text-center mb-3">Login</h4>
+
+  <!-- Email -->
+  <div class="mb-3">
+    <input type="email" id="email" class="form-control" placeholder="Enter your email">
+  </div>
+
+  <!-- Password -->
+  <div class="mb-3">
+    <input type="password" id="password" class="form-control" placeholder="Enter your password">
+  </div>
+
+  <!-- Button -->
+  <button class="btn btn-primary w-100" onclick="login()">Login</button>
+
+  <!-- Error -->
+  <p id="error" class="text-danger mt-3 text-center" style="display:none;"></p>
+
+  <!-- Redirect -->
+  <p class="text-center mt-3">
+    Don't have an account?
+    <a href="signup.html">Signup</a>
+  </p>
+
+</div>
+
+  </div>
+
+  <script>
+    const BASE_URL = "http://127.0.0.1:8000";
+
+    async function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorEl = document.getElementById("error");
+
+      // Validation
+      if (!email || !password) {
+        showError("Please fill all fields");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // Save token (adjust key based on backend response)
+          localStorage.setItem("token", data.access_token || data.token);
+
+          // Redirect to chat
+          window.location.href = "chat.html";
+
+        } else {
+          const err = await response.json();
+          showError(err.message || "Invalid email or password");
+        }
+
+      } catch (error) {
+        showError("Server error. Please try again.");
+      }
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById("error");
+      errorEl.innerText = message;
+      errorEl.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
